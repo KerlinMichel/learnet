@@ -27,7 +27,8 @@ class Chat extends Component {
         id: '',
         text: '',
         input: '',
-        teachAcc: ''
+        teachAcc: '',
+        teach: ''
       }
     }
 
@@ -45,6 +46,7 @@ class Chat extends Component {
           _this.setState({id: id});
           ref.child('chats/' + id).once('value', function(snap){
             _this.setState({teachAcc:snap.val().teacher});
+            _this.setState({teach:snap.val().teacher});
           }).then(function(){
             ref.child('users/' + _this.state.teachAcc).once('value', function(snap) {
               _this.setState({teachAcc:snap.val().accID});
@@ -126,6 +128,10 @@ class Chat extends Component {
       }).then(function (response) {
         response.json().then(function(data){
           console.log(data);
+          ref.child('users/' + _this.state.username).once('value', function(snap) {
+
+          })
+          ref.child('users/' + _this.state.username + '/charges/' + data.id).set({amount: '$' + (data.amount/100), sentTo : _this.state.teach});
         });
       });
     }
