@@ -14,6 +14,8 @@ import React, {
 
 import Home from './app/components/home.js';
 import Academy from './app/components/academy.js';
+import Account from './app/components/Account.js';
+//import Stripe from './app/components/Stripe.js';
 
 class learnet extends Component {
   render() {
@@ -35,6 +37,8 @@ class learnet extends Component {
         return (<Home navigator={navigator} />);
       case 'Academy':
         return (<Academy navigator={navigator}/>);
+      case 'Account':
+        return (<Account navigator={navigator}/>);
     }
   }
 }

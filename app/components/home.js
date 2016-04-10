@@ -11,6 +11,9 @@ import React, {
   TextInput
 } from 'react-native';
 
+var stripe_url = 'https://api.stripe.com/v1/'
+var secret_key = 'sk_test_7OwR2IfSJ3yMbJJKM1XI9p4j '
+
 var Firebase = require('firebase');
 
 var ref = new Firebase("https://learnet.firebaseio.com/");
@@ -61,21 +64,6 @@ class Home extends Component {
 
   signUp(row) {
 
-    /* navigator.geolocation.getCurrentPosition(
-      (position) => {
-        var lng = position['longitude'];
-        this.setState({lng});
-        var lat = position['latitude'];
-        this.setState({lat});
-      },
-      (error) => alert(error),
-      //{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-    );
-      ref.child('users/'+this.state.username).set({
-        password: this.state.password,
-        lng: this.state.lng,
-        lat: this.state.lat
-      }); */
       var this_ref = this;
       new Promise(function(res, rej) {
         navigator.geolocation.getCurrentPosition(
@@ -106,6 +94,46 @@ class Home extends Component {
           isTeacher: false
         });
       })
+
+      var details = {
+        "managed": 'true',
+        "country": 'US',
+        "legal_entity[type]": 'individual',
+        "legal_entity[first_name]": this.state.username,
+        "legal_entity[last_name]" : "Doth",
+        "legal_entity[address][city]" : "Homestead",
+        "legal_entity[dob][day]" : "31",
+        "legal_entity[dob][month]" : "12",
+        "legal_entity[dob][year]" : "1969",
+        "legal_entity[ssn_last_4]" : "1234",
+        "tos_acceptance[date]" : "1460213808",
+        "tos_acceptance[ip]" : "8.8.8.8"
+      };
+
+      var formBody = [];
+      for (var property in details) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(details[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody = formBody.join("&");
+
+      console.log( fetch(stripe_url + 'accounts', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer ' + secret_key
+        },
+        body: formBody
+      })
+        .then(function (response) {
+          response.json().then(function(data){
+            //console.log(data.id);
+            ref.child('users/'+this_ref.state.username+'/accID').set(data.id);
+          });
+        })
+    );
   }
 
   componentDidMount() {

@@ -61,34 +61,64 @@ class Academy extends Component {
       });*/
   var students = [];
   for(var s in this.state.students) {
-        students.push(<Text>{this.state.students[s].name}</Text>
+    var t;
+    if(this.state.students[s].isTeacher){
+      t = <Image source={require('./../../assets/teacher.png')></Image>
+    }
+        students.push(<TouchableHighlight> style={styles.row}>
+          <View><Text>{this.state.students[s].name}</Text>
+
+          </View>
+          </TouchableHighlight>
         );
   }
     if(this.state.isLoading) {
       return(<View><Text>Loading...</Text></View>)
     }
     return(
-      <View>
+      <View style={styles.container}>
       <ScrollView
                    scrollEnabled={true}>
          {students}
        </ScrollView>
-       <TouchableHighlight onPress={e => {this.goToAcc(e)}}>
+       <View style={styles.footer}>
+       <TouchableHighlight style={styles.footerBtns} onPress={e => {this.goToAcc(e)}}>
               <Text>Students</Text>
           </TouchableHighlight>
-       <TouchableHighlight onPress={e => {this.goToAcc(e)}}>
+       <TouchableHighlight style={styles.footerBtns} onPress={e => {this.goToAcc(e)}}>
              <Text>Teachers</Text>
          </TouchableHighlight>
-       <TouchableHighlight onPress={e => {this.goToAcc(e)}}>
+       <TouchableHighlight style={styles.footerBtns} onPress={e => {this.goToAcc(e)}}>
             <Text>Account settings</Text>
         </TouchableHighlight>
+       </View>
        </View>
       )
   }
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: 488,
+    flexDirection: 'column'
+  },
+  footer:{
+    flex: 6,
+    height: 50,
+    flexDirection: 'row'
+  },
 
+  footerBtns:{
+    flex:1
+  },
+
+  row:{
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    flexDirection: 'row'
+  },
 });
 
 export default Academy;
