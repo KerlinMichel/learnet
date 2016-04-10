@@ -70,20 +70,32 @@ class Academy extends Component {
   var students = this.state.students.map(function(item, key){
     var t;
     var s;
+    var des;
+    var skills;
+    if(item.desired){
+       des = <Text style={{color: 'white', alignSelf:'center', width: 60}}>{item.desired}</Text>
+    }
+    if(item.skills) {
+      skills = <Text style={{color: 'white', alignSelf:'center', width: 60}}>{item.skills}</Text>
+    }
     if(item.isTeacher){
-      t = <TouchableHighlight onPress={e => _this.sendNotify(item.name)}>
+      t = <View><TouchableHighlight onPress={e => _this.sendNotify(item.name)}>
           <Image style={styles.icon} source={require('./../../assets/teacher.png')} ></Image>
       </TouchableHighlight>
+          </View>
     }
     if(item.isStudent){
-      s = <TouchableHighlight onPress={e => _this.sendNotify(item.name)}>
+      s = <View><TouchableHighlight onPress={e => _this.sendNotify(item.name)}>
           <Image style={styles.icon} source={require('./../../assets/student.png')} ></Image>
       </TouchableHighlight>
+          </View>
     }
     return(<View style={styles.row} key={key}>
-          <Text>{item.name}</Text>
+          <Text style={{color: 'white', alignSelf:'center', width: 60}}>{item.name}</Text>
           {t}
+          {skills}
           {s}
+          {des}
           </View>
     )
   })
@@ -92,7 +104,7 @@ class Academy extends Component {
     }
     return(
       <View style={styles.container}>
-      <ScrollView
+      <ScrollView style={styles.scrollV}
                    scrollEnabled={true}>
          {students}
        </ScrollView>
@@ -130,7 +142,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   footer:{
-    flex: 6,
+    //flex: 2,
     height: 50,
     flexDirection: 'row'
   },
@@ -141,15 +153,23 @@ const styles = StyleSheet.create({
   },
 
   footerBtns:{
-    flex:1
+    flex:1,
+    height: 50,
+    backgroundColor: '#84b9f3',
+    margin: 1
   },
 
   row:{
     flex: 1,
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: '#84b9f3',
     flexDirection: 'row'
   },
+
+  scrollV: {
+    backgroundColor: '#1f1f42',
+    flex :6
+  }
 });
 
 export default Academy;

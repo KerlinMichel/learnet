@@ -149,7 +149,18 @@ class Chat extends Component {
         <TouchableHighlight onPress={e => {this.pay(e)}}>
           <Text>Pay</Text>
         </TouchableHighlight>
+
+        <TouchableHighlight style={{backgroundColor: 'white'}} onPress={e => {this.goAcad(e)}}>
+             <Text style={{fontSize: 27, color: 'black'}}>Go to academy</Text>
+        </TouchableHighlight>
         </View>)
+    }
+
+    goAcad() {
+      this.props.navigator.push({
+        id: 'Academy',
+        name: 'Academy'
+      });
     }
 }
 

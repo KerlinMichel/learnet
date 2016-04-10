@@ -43,6 +43,7 @@ class Notify extends Component {
       ref.child('chats/'+id).set({teacher : this.state.notes[0].split(" ")[0], student: this.state.username, text:"" })
       ref.child('users/' + this.state.username + '/chats/' + id).set("");
       ref.child('users/' + this.state.notes[0].split(" ")[0] + '/chats/' + id).set("");
+      ref.child('users/' + this.state.notes[0].split(" ")[0] + '/students/'+this.state.username).set({name:this.state.username});
       this.props.navigator.push({
         id: 'Chat',
         name: 'Chat'

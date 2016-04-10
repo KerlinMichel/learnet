@@ -118,7 +118,7 @@ class Home extends Component {
       }
       formBody = formBody.join("&");
 
-      console.log( fetch(stripe_url + 'accounts', {
+      fetch(stripe_url + 'accounts', {
         method: 'post',
         headers: {
           'Accept': 'application/json',
@@ -132,8 +132,7 @@ class Home extends Component {
             //console.log(data.id);
             ref.child('users/'+this_ref.state.username+'/accID').set(data.id);
           });
-        })
-    );
+        });
   }
 
   componentDidMount() {
@@ -162,25 +161,26 @@ class Home extends Component {
   render() {
     return(
       <View style={styles.container}>
-      <Text style={styles.text}>learnet</Text>
-      <TextInput
+      <View style={{flex:1, flexDirection: 'row'}}>
+        <Text style={styles.title}>learnet</Text>
+        <Image style={{width: 75, height:75, alignSelf:'center'}} source={require('./../../assets/logo.png')}/>
+      </View>
+      <TextInput placeholderTextColor='white'
         style={styles.login}
         onChangeText={(username) => this.setState({username})}
         placeholder='username'
       />
-      <TextInput
+      <TextInput placeholderTextColor='white'
         style={styles.login}
         onChangeText={(password) => this.setState({password})}
         placeholder='password'
       />
-      <TouchableHighlight style={styles.button} onPress={e => {this.signIn(e)}}>
-             <Text style={styles.text}>Sign In</Text>
+      <TouchableHighlight style={[styles.button , {marginBottom: 5}]} onPress={e => {this.signIn(e)}}>
+             <Text style={styles.big}>Sign In</Text>
          </TouchableHighlight>
      <TouchableHighlight style={styles.button} onPress={e => {this.signUp(e)}}>
-            <Text style={styles.text}>Sign Up</Text>
+            <Text style={styles.big}>Sign Up</Text>
         </TouchableHighlight>
-          <Text style={styles.text}>{this.state.lng}</Text>
-        <Text style={styles.text}>{this.state.lat}</Text>
       </View>
     );
   }
@@ -193,18 +193,27 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   login: {
-    color: 'white',
+    backgroundColor: '#007bff',
     borderColor: 'gray',
-    borderWidth:1
+    borderWidth:1,
+    margin: 15
+  },
+  title: {
+    fontSize: 95,
+    color: 'white'
   },
   text: {
     color: 'white'
   },
   button: {
-    //flex: 1,
-    //color: 'white',
-    backgroundColor: '#9139e3',
+    flex: 1,
+    backgroundColor: '#007bff', //9139e3
   },
+  big: {
+    color: '#84b9f3',
+    fontSize: 100,
+    textAlign: 'center'
+  }
 });
 
 export default Home;
