@@ -15,6 +15,8 @@ import React, {
 import Home from './app/components/home.js';
 import Academy from './app/components/academy.js';
 import Account from './app/components/Account.js';
+import Notify from './app/components/notify.js';
+import Chat from './app/components/chatroom.js';
 //import Stripe from './app/components/Stripe.js';
 
 class learnet extends Component {
@@ -39,6 +41,10 @@ class learnet extends Component {
         return (<Academy navigator={navigator}/>);
       case 'Account':
         return (<Account navigator={navigator}/>);
+      case 'Notify':
+        return (<Notify navigator={navigator}/>);
+      case 'Chat':
+        return (<Chat navigator={navigator}/>);
     }
   }
 }

@@ -39,6 +39,9 @@ class Academy extends Component {
         console.log(arr);
         _this.setState({students: arr});
         //console.log(_this.state.students);
+        AsyncStorage.getItem("username").then(function(username){
+          _this.setState({username: username})
+        })
     });
 
   }
@@ -50,37 +53,40 @@ class Academy extends Component {
     });
   }
 
-  sendNotify(recieve) {
-    console.log(recieve);
-    ref.child('users/' + recieve + '/notifys').set(this.state.username + 'Sent you a notification');
+  gotoChat(){
+    this.props.navigator.push({
+      id: 'Chat',
+      name: 'Chat'
+    });
   }
-//var name = this.state.students[s].name;
+
+  sendNotify(recieve) {
+    console.log('reciever:'+recieve);
+    console.log(this.state.username );
+    ref.child('users/' + recieve + '/notifys').set(this.state.username + ' Sent you a notification');
+  }
   render() {
-  var students = [];
-  for(var i in this.state.students) {
+  var _this = this;
+  var students = this.state.students.map(function(item, key){
     var t;
     var s;
-    var name = this.state.students[i]['name'];
-    if(this.state.students[i].isTeacher){
-      t = <TouchableHighlight onPress={this.sendNotify(this.state.students[i]['name'])}>
+    if(item.isTeacher){
+      t = <TouchableHighlight onPress={e => _this.sendNotify(item.name)}>
           <Image style={styles.icon} source={require('./../../assets/teacher.png')} ></Image>
       </TouchableHighlight>
     }
-    if(this.state.students[i].isStudent){
-      console.log(i + this.state.students[i].isStudent);
-      s = <TouchableHighlight onPress={this.sendNotify(this.state.students[i]['name'])}>
+    if(item.isStudent){
+      s = <TouchableHighlight onPress={e => _this.sendNotify(item.name)}>
           <Image style={styles.icon} source={require('./../../assets/student.png')} ></Image>
       </TouchableHighlight>
     }
-    students.push(<View style={styles.row}>
-          <Text>{this.state.students[i]['name']}</Text>
+    return(<View style={styles.row} key={key}>
+          <Text>{item.name}</Text>
           {t}
           {s}
           </View>
-        );
-    s = <View></View>
-    t = <View></View>
-  }
+    )
+  })
     if(this.state.isLoading) {
       return(<View><Text>Loading...</Text></View>)
     }
@@ -92,13 +98,13 @@ class Academy extends Component {
        </ScrollView>
 
        <View style={styles.footer}>
-       <TouchableHighlight style={styles.footerBtns} onPress={e => {this.goToAcc(e)}}>
+       <TouchableHighlight style={styles.footerBtns} onPress={e => {this.gotoToNotes(e)}}>
               <Text>Notifications</Text>
           </TouchableHighlight>
-       <TouchableHighlight style={styles.footerBtns} onPress={e => {this.goToAcc(e)}}>
+       <TouchableHighlight style={styles.footerBtns} onPress={e => {this.gotoChat(e)}}>
               <Text>Students</Text>
           </TouchableHighlight>
-       <TouchableHighlight style={styles.footerBtns} onPress={e => {this.goToAcc(e)}}>
+       <TouchableHighlight style={styles.footerBtns} onPress={e => {this.gotoChat(e)}}>
              <Text>Teachers</Text>
          </TouchableHighlight>
        <TouchableHighlight style={styles.footerBtns} onPress={e => {this.goToAcc(e)}}>
@@ -107,6 +113,13 @@ class Academy extends Component {
        </View>
        </View>
       )
+  }
+
+  gotoToNotes(row) {
+    this.props.navigator.push({
+      id: 'Notify',
+      name: 'Notify'
+    });
   }
 }
 
