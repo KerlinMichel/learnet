@@ -23,23 +23,22 @@ class Academy extends Component {
         username: "",
         password: "",
         students: [],
-        isLoading: true
+        isLoading: false
       };
     }
 
   componentDidMount() {
     var _this = this;
     ref.child('users').on('value', function(snapshot){
-        snapshot.forEach(function(childSnapshot){
-          _this.setState({isLoading: false});
-          //_this.state.students.push(childSnapshot.val());
-          //console.log(_this.state.students);
-          //console.log(typeof _this.state.students);
-          //console.log(typeof _this.state.students == '[object Array]');
-          //console.log(childSnapshot.val());
-        })
-        _this.setState({students: snapshot.val()});
-        console.log(snapshot.val());
+        _this.setState({isLoading: false});
+        var a = snapshot.val();
+        var arr = [];
+        for(var i in snapshot.val()){
+          arr.push(snapshot.val()[i]);
+        }
+        console.log(arr);
+        _this.setState({students: arr});
+        //console.log(_this.state.students);
     });
 
   }
@@ -51,26 +50,36 @@ class Academy extends Component {
     });
   }
 
+  sendNotify(recieve) {
+    console.log(recieve);
+    ref.child('users/' + recieve + '/notifys').set(this.state.username + 'Sent you a notification');
+  }
+//var name = this.state.students[s].name;
   render() {
-    //console.log(this.getStudents());
-    /*var students = this.state.students.map( (student, key) => {
-        return(
-          <View key={key}><Text>Academy{this.state.students}</Text>
-          </View>
-        );
-      });*/
   var students = [];
-  for(var s in this.state.students) {
+  for(var i in this.state.students) {
     var t;
-    if(this.state.students[s].isTeacher){
-      t = <Image source={require('./../../assets/teacher.png')></Image>
+    var s;
+    var name = this.state.students[i]['name'];
+    if(this.state.students[i].isTeacher){
+      t = <TouchableHighlight onPress={this.sendNotify(this.state.students[i]['name'])}>
+          <Image style={styles.icon} source={require('./../../assets/teacher.png')} ></Image>
+      </TouchableHighlight>
     }
-        students.push(<TouchableHighlight> style={styles.row}>
-          <View><Text>{this.state.students[s].name}</Text>
-
+    if(this.state.students[i].isStudent){
+      console.log(i + this.state.students[i].isStudent);
+      s = <TouchableHighlight onPress={this.sendNotify(this.state.students[i]['name'])}>
+          <Image style={styles.icon} source={require('./../../assets/student.png')} ></Image>
+      </TouchableHighlight>
+    }
+    students.push(<View style={styles.row}>
+          <Text>{this.state.students[i]['name']}</Text>
+          {t}
+          {s}
           </View>
-          </TouchableHighlight>
         );
+    s = <View></View>
+    t = <View></View>
   }
     if(this.state.isLoading) {
       return(<View><Text>Loading...</Text></View>)
@@ -81,7 +90,11 @@ class Academy extends Component {
                    scrollEnabled={true}>
          {students}
        </ScrollView>
+
        <View style={styles.footer}>
+       <TouchableHighlight style={styles.footerBtns} onPress={e => {this.goToAcc(e)}}>
+              <Text>Notifications</Text>
+          </TouchableHighlight>
        <TouchableHighlight style={styles.footerBtns} onPress={e => {this.goToAcc(e)}}>
               <Text>Students</Text>
           </TouchableHighlight>
@@ -107,6 +120,11 @@ const styles = StyleSheet.create({
     flex: 6,
     height: 50,
     flexDirection: 'row'
+  },
+
+  icon:{
+    width: 50,
+    height: 50
   },
 
   footerBtns:{
